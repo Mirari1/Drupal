@@ -28,10 +28,23 @@ class ExForm extends FormBase {
    '#required' => TRUE,
   ];
   
-   $form['email'] = [
+  $form['subject'] = [
    '#type' => 'textfield',
+   '#title' => $this->t('Тема'),
+   '#required' => TRUE,
+  ];
+  
+   $form['messege'] = [
+   '#type' => 'textarea',
+   '#title' => $this->t('Сообщение'),
+   '#required' => TRUE,
+  ];
+  
+   $form['mail'] = [
+   '#type' => 'email',
    '#title' => $this->t('E-mail'),
    '#required' => TRUE,
+   '#element_validate' => array('myelement_email_validate')
   ];
  
   // Add a submit button that handles the submission of the form.
@@ -60,12 +73,25 @@ class ExForm extends FormBase {
   }
  }
  
+function myelement_email_validate($element, &$form_state, $form) {
+  $value = $element['#value'];
+  if (!valid_email_address($value)) {
+    form_error($element, t('Please enter a valid email address.'));
+  }
+}
+ 
  // действия по сабмиту
  public function submitForm(array &$form, FormStateInterface $form_state) {
-  $name = $form_state->getValue('name');
-  $surname = $form_state->getValue('surname');
-  drupal_set_message(t('Вы ввели: %name.', ['%name' => $name]));
-  drupal_set_message(t('Вы ввели: %surname.', ['%surname' => $surname]));
+	$name = $form_state->getValue('name');
+	$surname = $form_state->getValue('surname');
+	$subject = $form_state->getValue('subject');
+	$messege = $form_state->getValue('messege');
+	$mail = $form_state->getValue('mail');
+	drupal_set_message(t('Вы ввели: %name.', ['%name' => $name]));
+	drupal_set_message(t('Вы ввели: %surname.', ['%surname' => $surname]));
+	drupal_set_message(t('Вы ввели: %subject.', ['%subject' => $subject]));
+	drupal_set_message(t('Вы ввели: %messege.', ['%messege' => $messege]));
+	drupal_set_message(t('Вы ввели: %mail.', ['%mail' => $mail]));
  }
  
 }
